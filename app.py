@@ -4,6 +4,7 @@ from flask import Flask , request , Response
 
 from flask_sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__ , instance_relative_config=False)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
@@ -12,7 +13,7 @@ movie_db = {"1": {"name" : "starwars" , "release_date" : "1998"} ,
             "2":{"name" : "Dune" , "release_date" : "2021"},
             }
 
-class Movies():
+class Movies(db.Model):
     id = db.Column('id' , db.Integer , primary_key=True)
     name = db.Column(db.VARCHAR(length=255))
     release_year = db.Column(db.Integer)
@@ -30,10 +31,10 @@ def hello():
 @app.route("/movie")
 def movie():
     #retrieve all movies from Table Movies :
-    movies = Movies.query.all() #select * from Movies
+    movie = Movies.query.all() #select * from Movies
     html_response = "<ul>"
-    for m in movies :
-        html_response += "<li>" + "<a href='/movie/" + m.id + "'>" + m.name + "</a>" + "</li>"
+    for m in movie:
+        html_response += "<li>" + "<a href='/movie/" + str(m.id) + "'>" + m.name + "</a>" + "</li>"
     html_response += "</ul>"
     return html_response
 
